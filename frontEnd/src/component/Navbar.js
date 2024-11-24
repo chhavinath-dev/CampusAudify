@@ -3,6 +3,7 @@ const Navbar = (props) => {
   const logout = async () => {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
+	 localStorage.removeItem("guest_name");
     const temp = await props.setIsLogged(false);
     document.getElementById("toLogin").click();
   };
@@ -24,7 +25,7 @@ const Navbar = (props) => {
   </div>
   {(props.isLogged===true) &&  
         <div className="d-flex justify-content-end me-4">
-          <h5 className="mx-2" style={{color:"white", marginTop:"6px"}}>{localStorage.getItem("name")}</h5>{" "}
+          <h5 className="mx-2" style={{color:"white", marginTop:"6px"}}>{localStorage.getItem("name")? localStorage.getItem("name"): localStorage.getItem("guest_name")}</h5>{" "}
           <button onClick={logout} className="btn btn-primary">
             Log out
           </button>{" "}
