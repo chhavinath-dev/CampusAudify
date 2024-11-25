@@ -72,7 +72,6 @@ const SignUp = (props) => {
 			body: JSON.stringify({ name, email, password }), // body data type must match "Content-Type" header
 		});
 		const json = await response.json();
-		console.log(json);
 		setCredentials({ name: "", email: "", password: "", confirm_password: "" });
 		if (json.success) {
 			localStorage.setItem("token", json.token);
@@ -80,7 +79,6 @@ const SignUp = (props) => {
 			props.setIsLogged(true);
 			document.getElementById("toHome").click();
 		} else {
-			console.log(json);
 			if (json.errors === "User with email already exist") {
 				document.getElementById("errmsg").textContent =
 					"Email is already exist try to login with email";
@@ -121,12 +119,6 @@ const SignUp = (props) => {
 	};
 	const onChange = (e) => {
 		setCredentials({ ...credentials, [e.target.name]: e.target.value });
-		console.log(
-			credentials.name,
-			credentials.email,
-			credentials.password,
-			credentials.confirm_password
-		);
 	};
 	useEffect(() => {
 		if (
@@ -237,7 +229,6 @@ const SignUp = (props) => {
 								let r1 = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
 								str += r1;
 							}
-							console.log("string", str);
 							localStorage.setItem("guest_name", str);
 							props.setIsLogged(true);
 							document.getElementById("toHome").click();
@@ -338,7 +329,6 @@ const SignUp = (props) => {
 								let r1 = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
 								str += r1;
 							}
-							console.log("string", str);
 							localStorage.setItem("guest_name", str);
 							props.setIsLogged(true);
 							document.getElementById("toHome").click();

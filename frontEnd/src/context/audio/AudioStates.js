@@ -44,7 +44,6 @@ const AudioStates = (props) => {
 	// }
 	const fetchAllAudio = async () => {
 		setIsConverting(true)
-		console.log(isConverting)
 		const response = await fetch(`${host}/api/audio/fetchallaudio`, {
 			method: "GET",
 
@@ -56,7 +55,6 @@ const AudioStates = (props) => {
 		});
 		const Json = await response.json();
 		setIsConverting(false);
-		console.log(isConverting)
 		setAudios(Json);
 	};
 
@@ -77,7 +75,6 @@ const AudioStates = (props) => {
 
 		// Read the .gif file back from the FFmpeg file system
 		const data = await ffmpeg.readFile('out.mp3');
-		console.log("audios data", data);
 		let url;
 		var d = new Date();
 		var file = new File(
@@ -85,9 +82,6 @@ const AudioStates = (props) => {
 			d.valueOf(),
 			{ type: "audio/mpeg" }
 		);
-
-		console.log("file: ", file);
-		console.log("time: ", d.getSeconds());
 		const storage = getStorage();
 
 		const storageRef = ref(storage, `${description}`.concat(`${d.getTime()}`));
@@ -108,9 +102,6 @@ const AudioStates = (props) => {
 				};
 				xhr.open("GET", curl);
 				xhr.send();
-
-				// Or inserted into an <img> element
-				console.log("url:", curl);
 				url = curl;
 			})
 			.catch((error) => {
@@ -145,13 +136,10 @@ const AudioStates = (props) => {
 			body: JSON.stringify({ url, description, tag }),
 		});
 		const Json = await response.json();
-		console.log("Json: ", Json);
-		console.log(Json.url);
 		setIsConverting(false);
 		setAudios(audios.concat(Json));
 	};
 	const updateAudio = async (id, description) => {
-		console.log("id: ", id);
 		const response = await fetch(`${host}/api/audio/updateaudio/${id}`, {
 			method: "PUT",
 
@@ -164,8 +152,6 @@ const AudioStates = (props) => {
 
 		let newAudio = [...audios];
 		const Json = await response.json();
-		console.log("Json: ", Json);
-		console.log(Json.url);
 		for (let i = 0; i < newAudio.length; i++) {
 			if (newAudio[i]._id === id) {
 				newAudio[i].description = description;
@@ -173,22 +159,15 @@ const AudioStates = (props) => {
 		}
 
 		setAudios(newAudio);
-		// let newAudio = audios.filter((audio) => {
-		//   console.log(audio._id);
-		//   console.log(id);
-		//   return audio._id !== id;
-		// });
-		// console.log(newAudio);
-		// newAudio=newAudio.concat(Json);
-		// console.log(newAudio);
-		// setAudios(newAudio);
-
-
-		// setAudios(audios.concat(Json));
 	};
 
 	const deleteAudio = async (id) => {
-		console.log("id: ", id);
+		if (!localStorage.getItem("token")) {
+			const newAudios = audios.filter((audio) => audio.url !== id);
+			setAudios(newAudios)
+			sessionStorage.setItem("audios", JSON.stringify(newAudios));
+			return;
+		}
 		const response = await fetch(`${host}/api/audio/deleteaudio/${id}`, {
 			method: "DELETE",
 
@@ -211,7 +190,7 @@ const AudioStates = (props) => {
 				setVideo,
 				video,
 				addAudio,
-                setAudios,
+				setAudios,
 				fetchAllAudio,
 				deleteAudio,
 				updateAudio,

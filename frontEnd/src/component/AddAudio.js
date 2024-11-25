@@ -6,7 +6,6 @@ const AddAudio = (props) => {
    const [videoUrl, setVideoUrl]= useState("");
     const [audio, setAudio]= useState({ description:"", tag:"default"})
     const addAudioByinput=(event)=>{
-      
        event.preventDefault();
        if(audio.description.length<5){
         alert("please provide a valid description");
@@ -23,7 +22,6 @@ const AddAudio = (props) => {
           return 
       }
      
-     console.log(video)
      addAudio(video, audio.description, audio.tag);
      props.showAlert("Successfully converted", "success")
      setAudio({ description:" ", tag:"default"});
@@ -36,7 +34,6 @@ const AddAudio = (props) => {
    }
    const onChangeFile=(e)=>{
     setVideo(e.target.files?.item(0));
-    console.log(e.target.files[0])
    }
    const onChangeUrl =(e)=>{
      setVideoUrl(e.target.value);
@@ -44,7 +41,7 @@ const AddAudio = (props) => {
   return (
     <>
       <div className='p-4 col-12 col-md-6 ' >
-    <form>
+    <form onSubmit={addAudioByinput}>
     <div className="form-group" >
       {/* <label htmlFor="title">Email address</label> */}
       {/* <input onChange={onChangeUrl} type="text" className="form-control my-3" name="url" value={videoUrl} placeholder='put the id of youtube video'></input> */}
@@ -54,14 +51,13 @@ const AddAudio = (props) => {
     </div>
     <div className="form-group d-md-none">
       {/* <label htmlFor="description">Description</label> */}
-      <input style={{borderRadius:"10px"}}  onChange={onChange} value={audio.description} type="text" className="form-control my-3" id="description" name='description'  placeholder='Description' />  
+      <input style={{borderRadius:"10px"}} onKeyDown={(e)=> e.preventDefault()}  onChange={onChange} value={audio.description} type="text" className="form-control my-3" id="description" name='description'  placeholder='Description' />  
     </div>
-   
-    <button  type="submit" className="btn btn-dark btn-custom" onClick={addAudioByinput}>Convert</button>
+    <button  type="submit" className="btn btn-dark btn-custom">Convert</button>
   </form> 
   </div>
     <div className='p-4 d-none d-md-block col-md-6' >
-    <form>
+    <form onSubmit={addAudioByinput}>
     <div className="form-group">
       {/* <label htmlFor="description">Description</label> */}
       <input style={{borderRadius:"10px"}}  onChange={onChange} value={audio.description} type="text" className="form-control my-3" id="description" name='description'  placeholder='Description' />  

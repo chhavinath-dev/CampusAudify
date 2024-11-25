@@ -18,7 +18,6 @@ const Login = (props) => {
 			body: JSON.stringify(credentials),
 		});
 		const json = await response.json();
-		console.log(json);
 		setCredentials({ email: "", password: "" });
 		if (json.success) {
 			localStorage.setItem("token", json.token);
@@ -158,7 +157,6 @@ const Login = (props) => {
 								let r1 = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
 								str += r1;
 							}
-							console.log("string", str);
 							localStorage.setItem("guest_name", str);
 							props.setIsLogged(true);
 							document.getElementById("toHome").click();
@@ -234,7 +232,6 @@ const Login = (props) => {
 								let r1 = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
 								str += r1;
 							}
-							console.log("string", str);
 							localStorage.setItem("guest_name", str);
 							props.setIsLogged(true);
 							document.getElementById("toHome").click();
