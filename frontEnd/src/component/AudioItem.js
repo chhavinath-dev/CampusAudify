@@ -1,8 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import audioContext from "../context/audio/audioContext";
 import loading from "../loading_audio.gif"
 const AudioItem = (props) => {
 	const [url, setUrl] = useState("");
+	const modalRef = useRef(null);
 	const [isloading, setIsloading] = useState(false);
 	const context = useContext(audioContext);
 	const { deleteAudio, updateAudio } = context;
@@ -40,7 +41,7 @@ const AudioItem = (props) => {
 	return (
 
 		<div className="card my-3" style={{ borderRadius: "10px" }}>
-			<div className="card-body d-flex flex-row align-items-center" id="cardBody">
+			<div className="card-body d-flex flex-row align-items-center justify-content-between" id="cardBody">
 				{!isloading && url && (
 					<audio controls>
 						<source src={url} type="audio/mpeg" />
@@ -49,31 +50,60 @@ const AudioItem = (props) => {
 				{isloading && (
 					<img src={loading} style={{ width: "10vw" }} alt="" />
 				)}
-				<span className="mx-5 d-none d-sm-block"><span style={{ fontWeight: "bold" }}>created on</span>: {ele.createdOn}</span>
-				<span className="mx-4 align-items-center d-none d-md-block">{ele.description}</span>
-				<span style={{ alignItems: "center" }}> <i
+				<div className="mx-5 d-none d-sm-block"><span style={{ fontWeight: "bold" }}>created on</span>: {ele.createdOn}</div>
+				<div className="mx-4 align-items-center d-none d-md-block">{ele.description}</div>
+				<div className="d-flex flex-row">
+					<div style={{ alignItems: "center" }} className="mx-3">
+						<i
 
-					className="fa-sharp fa-solid fa-trash mx-2  d-none d-md-block"
-					onClick={() => {
-						if (!localStorage.getItem('token')) {
-							deleteAudio(ele.url);
-							return;
-						}
-						deleteAudio(ele._id);
-					}}
-				></i>
-				</span>
-				<a
-					href={ele.url}
-					style={{ color: "black" }}
-					target="_blank"
-					rel="noreferrer"
-				>
-					<i className="fa-solid fa-download mx-2  d-none d-md-block"></i>
-				</a>
-
-
-				{<i className="fa-solid fa-pen-to-square mx-2  d-none d-md-block" data-bs-toggle="modal" data-bs-target={`#UpdateModal${ele._id}`}></i>}
+							className="fa-sharp fa-solid fa-trash d-none d-md-block"
+							onClick={() => {
+								if (!localStorage.getItem('token')) {
+									deleteAudio(ele.url);
+									return;
+								}
+								deleteAudio(ele._id);
+							}}
+						></i>
+					</div>
+					<div className="mx-3">
+						<a
+							href={ele.url}
+							style={{ color: "black" }}
+							target="_blank"
+							rel="noreferrer"
+						>
+							<i className="fa-solid fa-download mx-2  d-none d-md-block"></i>
+						</a>
+					</div>
+					{localStorage.getItem('token') ?
+						<div className="mx-3">
+							<i className="fa-solid fa-pen-to-square mx-2  d-none d-md-block" data-bs-toggle="modal" data-bs-target={`#UpdateModal${ele._id}`}>
+							</i>
+						</div>
+						:
+						<div className="mx-3 position-relative">
+							<i className="fa-solid fa-pen-to-square mx-2  d-none d-md-block text-danger" onMouseEnter={
+								() => {
+									if (modalRef.current) {
+										modalRef.current.style.display = "block";
+									}
+								}
+							} onMouseLeave={
+								() => {
+									if (modalRef.current) {
+										modalRef.current.style.display = "none";
+									}
+								}
+							}>
+							</i>
+							<div ref={modalRef} className="position-absolute start-50 translate-middle-x mt-2 bg-white p-2 border rounded shadow"
+							style={{display: 'none', fontSize:'0.7rem'}}
+							>
+								This feature is available exclusively to registered users.
+							</div>
+						</div>}
+				</div>
 
 				<div className="modal fade" id={`UpdateModal${ele._id}`} tabIndex="-1" aria-labelledby="UpdateModalLabel" aria-hidden="true">
 					<div className="modal-dialog">
